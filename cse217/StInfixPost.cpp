@@ -19,9 +19,9 @@ struct Stack* createStack( unsigned capacity)
 	stack->top=-1;
 	stack->capacity = capacity;
 	stack->arr = (int*) malloc(stack->capacity*sizeof(int));
-        if (!stack->array)
+        if (!stack->arr)
 		return NULL;
-	return Stack;
+	return stack;
 }
 
 int isEmpty(struct Stack* stack)
@@ -42,7 +42,7 @@ char peek(struct Stack* stack)
 char pop(struct Stack* stack)
 {
 	if (!isEmpty(stack))
-		return stack->arr[stack->top--]
+		return stack->arr[stack->top--];
 	return '$';
 }
 
@@ -88,11 +88,29 @@ int infixToPostfix(char* exp)
 		{
 			while (!isEmpty(stack) && peek(stack)!='(' )
 				exp[++k]=pop(stack);
-
+			if (!isEmpty(stack) && peek(stack))
+				return -1;
+			else
+				pop(stack);
+		}
+		else
+		{
+			while (!isEmpty(stack) && Precedence(exp[i]) <= Precedence(peek(stack)))
+				exp[++k]=pop(stack);
+			push(stack,exp[i]);			
 		}
 	}
+	while (isEmpty(stack))
+		exp[++k]=pop(stack);
+	exp[++k]= '\0';
+	printf("%s",exp);
 }
 
-
+int main()
+{
+	char exp[]="a+b*(c^d-e)^(f+g*h)-i";
+	infixToPostfix(exp);
+	return 0;
+}
 
 
